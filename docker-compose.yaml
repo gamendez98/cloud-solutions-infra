@@ -1,0 +1,97 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    container_name: ollama_container
+    ports:
+      - "11434:11434"
+    volumes:
+        - ./ollama/ollama:/root/.ollama
+        - ./ollama_entrypoint.sh:/entrypoint.sh
+    entrypoint: [ "/usr/bin/bash", "/entrypoint.sh" ]
+      
+  postgres:
+    build:
+      context: cloud-solutions-api
+      dockerfile: Dockerfile.postgres  # Path to your custom Dockerfile
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./cloud-solutions-api/db/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  rabbitmq:
+    image: rabbitmq:4.0.6-management
+    container_name: rabbitmq_container
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+
+  rag-api:
+    build: rag-api
+    container_name: rag
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      ollama:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  app:
+    build:
+      context: cloud-solutions-api
+      dockerfile: Dockerfile
+    container_name: app_container
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres_container
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      RABBIT_MQ_HOST: rabbitmq_container
+      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
+      RABBIT_MQ_PORT: 5672
+    depends_on:
+      rag-api:
+        condition: service_started
+
+  frontend:
+    build:
+      context: misisCloudProject1-frotend
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      app:
+        condition: service_started
+
+
+volumes:
+  ollama-data:
