@@ -7,3 +7,5 @@ rag-api
 ollama
 
 .env
+
+.idea
