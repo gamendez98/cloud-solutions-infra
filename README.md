@@ -18,6 +18,9 @@ This project depends on the following codebases:
 2. Document Indexing; RAG + generative LLM: https://github.com/SantiagoFino/rag-api
 3. Front end: https://github.com/helberthCO/misisCloudProject1-frotend
 
+## Architecture
+
+![Local Image](cloud_solutions_diagram.png "Local Image")
 
 ## Demonstration
 
