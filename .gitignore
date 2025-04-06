@@ -8,4 +8,6 @@ ollama
 
 .env
 
+.secrets
+
 .idea
