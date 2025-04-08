@@ -9,5 +9,9 @@ ollama
 .env
 
 .secrets
+.venv
+venv
+
+load_test/variables.json
 
 .idea
