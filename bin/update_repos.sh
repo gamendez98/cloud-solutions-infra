@@ -1,7 +1,5 @@
 #!/bin/bash
 
-docker-compose down
-
 if [ ! -d "rag-api" ]; then
     git clone https://github.com/SantiagoFino/rag-api
 else
@@ -19,5 +17,3 @@ if [ ! -d "misisCloudProject1-frotend" ]; then
 else
     cd misisCloudProject1-frotend && git pull && cd ..
 fi
-
-docker-compose up --build
