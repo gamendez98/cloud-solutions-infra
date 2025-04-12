@@ -38,8 +38,9 @@ def login(http_user: HttpUser, account: dict):
 
 
 # Scenario 1: Indexado de documentos
+# limit --- rate 2
 class DocumentIndexingUser(HttpUser):
-    wait_time = between(0.3, 0.7)
+    wait_time = between(0.7, 1.3)
     host = "http://34.69.143.161"
 
     def on_start(self):
@@ -162,10 +163,10 @@ class FullLoadTestUser(HttpUser):
             "sender": "user"
         })
 
-    @task(10)
-    def get_chats(self):
-        self.client.get(f"/accounts/chats")
 
     @task(10)
     def index_documents(self):
         self.client.post("/documents", files={"file": open("test.pdf", "rb")})
+
+
+
