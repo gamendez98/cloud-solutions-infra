@@ -120,7 +120,7 @@ class InformationRetrivalUser(HttpUser):
 
 # Scenario 4: Full Load Test
 class FullLoadTestUser(HttpUser):
-    wait_time = between(1, 3)
+    wait_time = between(0.7, 1.3)
     host = "http://35.201.69.50"
     prompt = "Por favor necesito que me des informacion aleatoria de uno de los documentos que haz recibido, ademas dime si existen documentos repetidos."
     sequential = 0
