@@ -101,7 +101,7 @@ class GenerateAnswersUser(HttpUser):
 
 # Scenario 3: Information retrieval
 class InformationRetrivalUser(HttpUser):
-    wait_time = between(1, 3)  # Simulates user wait time between tasks
+    wait_time = between(0.7, 1.3)  # Simulates user wait time between tasks
     host = "http://35.201.69.50"
 
     def on_start(self):
