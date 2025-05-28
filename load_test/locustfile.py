@@ -41,7 +41,7 @@ def login(http_user: HttpUser, account: dict):
 # limit --- rate 2
 class DocumentIndexingUser(HttpUser):
     wait_time = between(0.7, 1.3)
-    host = "http://35.201.69.50"
+    host = "https://34-120-90-189-1.sslip.io"
     # 150 @ 2u/s
 
     def on_start(self):
@@ -64,7 +64,7 @@ class DocumentIndexingUser(HttpUser):
 # Scenario 2: Generación de respuestas con LLM
 class GenerateAnswersUser(HttpUser):
     wait_time = between(0.1, 0.1)
-    host = "http://35.201.69.50"
+    host = "https://34-120-90-189-1.sslip.io"
     sequential = 0
     prompt = "Por favor necesito que me des informacion aleatoria de uno de los documentos que haz recibido, ademas dime si existen documentos repetidos."
 
@@ -102,7 +102,7 @@ class GenerateAnswersUser(HttpUser):
 # Scenario 3: Information retrieval
 class InformationRetrivalUser(HttpUser):
     wait_time = between(0.7, 1.3)  # Simulates user wait time between tasks
-    host = "http://35.201.69.50"
+    host = "https://34-120-90-189-1.sslip.io"
 
     def on_start(self):
         random_user = VARIABLES['accounts'][0]
@@ -121,7 +121,7 @@ class InformationRetrivalUser(HttpUser):
 # Scenario 4: Full Load Test
 class FullLoadTestUser(HttpUser):
     wait_time = between(0.7, 1.3)
-    host = "http://35.201.69.50"
+    host = "https://34-120-90-189-1.sslip.io"
     prompt = "Por favor necesito que me des informacion aleatoria de uno de los documentos que haz recibido, ademas dime si existen documentos repetidos."
     sequential = 0
 
